@@ -56,6 +56,12 @@ export function DashboardSidebar({ className }: SidebarProps) {
             href: "/dashboard/analytics",
             color: "text-orange-700",
         },
+        {
+            label: "Add Category",
+            icon: PlusCircle,
+            href: "/dashboard/category/add-category",
+            color: "text-violet-500",
+        },
     ]
 
     return (

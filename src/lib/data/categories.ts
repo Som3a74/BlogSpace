@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { TCategory } from '@/types/category'
 
 export async function getCategories() {
     try {
@@ -27,6 +28,43 @@ export async function getCategories() {
             status: 500,
             success: false,
             data: []
+        }
+    }
+}
+
+export async function AddCategory(data: TCategory) {
+    const categoryData = await data
+
+    try {
+        const category = await prisma.category.create({
+            data: {
+                name: categoryData.name,
+            }
+        })
+
+        return {
+            success: true,
+            data: category,
+            message: "Category created successfully",
+            status: 201
+        }
+
+    } catch (error: any) {
+        if (error.code === 'P2002') {
+            return {
+                success: false,
+                message: 'Category with this name already exists',
+                error: error.message,
+                status: 409, // Conflict
+                data: null
+            }
+        }
+        return {
+            success: false,
+            message: 'Internal Server Error',
+            error: error instanceof Error ? error.message : "Unknown error",
+            status: 500,
+            data: null
         }
     }
 }
