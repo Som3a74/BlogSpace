@@ -821,10 +821,10 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
-  password: 'password',
   isAdmin: 'isAdmin',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  password: 'password'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -843,15 +843,15 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export const ArticleScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  introduction: 'introduction',
-  proTip: 'proTip',
-  conclusion: 'conclusion',
   published: 'published',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
   image: 'image',
-  categoryId: 'categoryId'
+  categoryId: 'categoryId',
+  conclusion: 'conclusion',
+  introduction: 'introduction',
+  proTip: 'proTip'
 } as const
 
 export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]

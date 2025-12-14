@@ -11,10 +11,10 @@ model User {
   id        Int       @id @default(autoincrement())
   email     String    @unique
   name      String?
-  password  String?
   isAdmin   Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  password  String?
   articles  Article[]
   comments  Comment[]
   likes     Like[]
@@ -31,19 +31,19 @@ model Category {
 model Article {
   id           Int       @id @default(autoincrement())
   title        String    @default("...")
-  introduction String    @default("...")
-  proTip       String    @default("...")
-  conclusion   String    @default("...")
   published    Boolean   @default(false)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   userId       Int
   image        String?
   categoryId   Int
+  conclusion   String    @default("...")
+  introduction String    @default("...")
+  proTip       String    @default("...")
+  category     Category  @relation(fields: [categoryId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
   comments     Comment[]
   likes        Like[]
-  user         User      @relation(fields: [userId], references: [id])
-  category     Category  @relation(fields: [categoryId], references: [id])
 }
 
 model Comment {
