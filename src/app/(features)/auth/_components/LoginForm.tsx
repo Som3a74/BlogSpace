@@ -1,14 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { FormFeedback } from "@/components/feedback/form-feedback"
 
 export function LoginForm() {
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -30,16 +32,27 @@ export function LoginForm() {
                 body: JSON.stringify(formDataObject),
             })
             const data = await response.json()
-            console.log(data)
-            setLoading(false)
+
+            if (response.status === 200) {
+                setLoading(false)
+                toast.success(data.message)
+            } else {
+                setError(data.message || "Failed to login");
+                setLoading(false)
+            }
+
         } catch (error) {
             setLoading(false)
-            toast.error("Failed to login")
-            console.log("Failed to login", error)
+            setError(error as string)
         }
     }
 
-
+    useEffect(() => {
+        return () => {
+            setError(null)
+            setLoading(false)
+        }
+    }, [])
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -69,6 +82,7 @@ export function LoginForm() {
                     disabled={loading}
                 />
             </div>
+            <FormFeedback message={error} type="error" />
             <Button className="w-full" type="submit" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Sign in

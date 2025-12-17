@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Loader2, Save } from "lucide-react";
 import Link from "next/link";
+import { FormFeedback } from "@/components/feedback/form-feedback";
 
 export default function AddCategoryPage() {
     const router = useRouter();
@@ -90,17 +91,8 @@ export default function AddCategoryPage() {
                             />
                         </div>
 
-                        {error && (
-                            <div className="p-3 text-sm text-red-500 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-900">
-                                {error}
-                            </div>
-                        )}
-
-                        {success && (
-                            <div className="p-3 text-sm text-green-500 bg-green-50 dark:bg-green-900/20 rounded-md border border-green-200 dark:border-green-900">
-                                {success}
-                            </div>
-                        )}
+                        <FormFeedback message={error} type="error" />
+                        <FormFeedback message={success} type="success" />
                     </CardContent>
                     <CardFooter className="flex justify-end gap-2 mt-4">
                         <Button

@@ -41,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <LayoutWrapper>
           <main>
             {children}
-            <Toaster />
+            <Toaster position="top-center" richColors theme="light" />
           </main>
         </LayoutWrapper>
       </body>

@@ -43,7 +43,7 @@ const BlogSidebar = async () => {
                         <AccordionTrigger>Categories</AccordionTrigger>
                         <AccordionContent>
                             <div className="flex flex-col gap-2">
-                                {categories.data.map((cat: any) => (
+                                {categories.data?.map((cat: any) => (
                                     <label key={cat.id} className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary transition-colors">
                                         <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
                                         {cat.name}
