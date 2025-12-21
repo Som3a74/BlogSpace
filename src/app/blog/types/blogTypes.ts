@@ -3,11 +3,7 @@ export interface BlogCardProps {
     image: string
     updatedAt: string
     createdAt: string
-    content: {
-        introduction: string
-        proTip: string
-        conclusion: string
-    }
+    content: any
     user: {
         id: string
         name: string

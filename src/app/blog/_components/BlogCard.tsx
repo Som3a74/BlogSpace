@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { dataFormat } from '@/utilities/dataFormat'
+import { dataFormat } from '@/utils/dataFormat'
 import { BlogCardProps } from '../types/blogTypes'
 
 const BlogCard = ({

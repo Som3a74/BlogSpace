@@ -7,14 +7,21 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  AUTHOR
+  ADMIN
+}
+
 model User {
   id        String    @id @default(cuid())
   email     String    @unique
   name      String
-  isAdmin   Boolean   @default(false)
+  role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   password  String
+  image     String?
   articles  Article[]
   comments  Comment[]
   likes     Like[]
@@ -29,21 +36,21 @@ model Category {
 }
 
 model Article {
-  id           Int       @id @default(autoincrement())
-  title        String    @default("...")
-  published    Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  userId       String
-  image        String?
-  categoryId   Int
-  conclusion   String    @default("...")
-  introduction String    @default("...")
-  proTip       String    @default("...")
-  category     Category  @relation(fields: [categoryId], references: [id])
-  user         User      @relation(fields: [userId], references: [id])
-  comments     Comment[]
-  likes        Like[]
+  id         Int       @id @default(autoincrement())
+  slug       String    @unique
+  title      String    @default("...")
+  published  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String
+  image      String?
+  categoryId Int
+  content    Json
+  proTip     String?   @default("...")
+  category   Category  @relation(fields: [categoryId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  comments   Comment[]
+  likes      Like[]
 }
 
 model Comment {

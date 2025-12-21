@@ -8,8 +8,10 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
+import { ImageIcon, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { UploadButton } from "@/utils/uploadthing";
+import { toast } from "sonner"
 
 interface Category {
     id: number
@@ -24,6 +26,7 @@ export function ArticleForm({ categories }: ArticleFormProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [published, setPublished] = useState(false)
+    const [image, setImage] = useState<string | null>(null)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -33,19 +36,19 @@ export function ArticleForm({ categories }: ArticleFormProps) {
 
         const data = {
             title: formData.get("title"),
-            introduction: formData.get("introduction"),
+            slug: formData.get("slug"),
+            content: formData.get("content"),
             proTip: formData.get("proTip"),
-            conclusion: formData.get("conclusion"),
             published,
             categoryId: Number(formData.get("category")),
-            image: formData.get("image"),
+            image: image,
             createdAt: new Date(),
             updatedAt: new Date(),
-            userId: "cmj8znd990000nodom47bzoai",
+            userId: "cmjemgaoq0000ngdo09u35sei",
         }
 
         try {
-            const response = await fetch("/api/article", {
+            const response: any = await fetch("/api/article", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,10 +57,12 @@ export function ArticleForm({ categories }: ArticleFormProps) {
             })
             setLoading(false)
             console.log(response)
+            toast.success(response.message)
             // await router.push("/dashboard/article")
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
             setLoading(false)
+            toast.error(error.message)
         }
     }
 
@@ -78,15 +83,22 @@ export function ArticleForm({ categories }: ArticleFormProps) {
                                 <Input id="title" name="title" placeholder="Enter article title" required />
                             </div>
 
+                            {/* slug input */}
                             <div className="space-y-2">
-                                <Label htmlFor="introduction">Introduction</Label>
+                                <Label htmlFor="slug">Slug</Label>
+                                <Input id="slug" name="slug" placeholder="Enter article slug" required />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="content">Content</Label>
                                 <Textarea
-                                    id="introduction"
-                                    name="introduction"
-                                    placeholder="Write a catchy introduction..."
-                                    className="min-h-[150px]"
+                                    id="content"
+                                    name="content"
+                                    placeholder="Write your article content..."
+                                    className="min-h-[100px]"
                                 />
                             </div>
+
 
                             <div className="space-y-2">
                                 <Label htmlFor="proTip">Pro Tip</Label>
@@ -98,15 +110,6 @@ export function ArticleForm({ categories }: ArticleFormProps) {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="conclusion">Conclusion</Label>
-                                <Textarea
-                                    id="conclusion"
-                                    name="conclusion"
-                                    placeholder="Wrap it up..."
-                                    className="min-h-[100px]"
-                                />
-                            </div>
                         </CardContent>
                     </Card>
                 </div>
@@ -147,8 +150,29 @@ export function ArticleForm({ categories }: ArticleFormProps) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="image">Cover Image URL</Label>
-                                <Input id="image" name="image" placeholder="https://example.com/image.jpg" />
+                                <Label htmlFor="image">Cover Image</Label>
+                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
+                                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
+                                        <ImageIcon className="h-6 w-6 text-secondary-foreground" />
+                                    </div>
+                                    <div className="mt-4 flex flex-col items-center justify-center space-y-2">
+                                        <UploadButton
+                                            endpoint="imageUploader"
+                                            onClientUploadComplete={(res) => {
+                                                // console.log("Files: ", res);
+                                                setImage(res[0].ufsUrl)
+                                                toast.success("Upload Completed" + res[0].ufsUrl);
+                                            }}
+                                            onUploadError={(error: Error) => {
+                                                toast.error(`ERROR! ${error.message}`);
+                                            }}
+                                            appearance={{
+                                                button: "underline text-black!",
+                                                allowedContent: "text-primary"
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </CardContent>
                         <CardFooter>

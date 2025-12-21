@@ -7,7 +7,7 @@ import BlogCard from '../_components/BlogCard'
 import SharedButton from './_components/SharedButton'
 import { notFound } from 'next/navigation'
 import SpecificBlogSidebar from "./_components/SpecificBlogSidebar"
-import { dataFormat } from "@/utilities/dataFormat"
+import { dataFormat } from "@/utils/dataFormat"
 
 import { getArticleById } from '@/lib/data/articles'
 
@@ -80,7 +80,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 {/* Main Content */}
                 <article className="lg:col-span-8" id="content">
-                    <BlogContent content={data.content} />
+                    <BlogContent content={data.content} proTip={data.proTip ?? undefined} />
                 </article>
 
                 {/* specific blog Sideba */}

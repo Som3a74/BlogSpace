@@ -1,12 +1,16 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'AUTHOR', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "password" TEXT NOT NULL,
+    "image" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -24,6 +28,7 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "Article" (
     "id" SERIAL NOT NULL,
+    "slug" TEXT NOT NULL,
     "title" TEXT NOT NULL DEFAULT '...',
     "published" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -31,9 +36,8 @@ CREATE TABLE "Article" (
     "userId" TEXT NOT NULL,
     "image" TEXT,
     "categoryId" INTEGER NOT NULL,
-    "conclusion" TEXT NOT NULL DEFAULT '...',
-    "introduction" TEXT NOT NULL DEFAULT '...',
-    "proTip" TEXT NOT NULL DEFAULT '...',
+    "content" JSONB NOT NULL,
+    "proTip" TEXT DEFAULT '...',
 
     CONSTRAINT "Article_pkey" PRIMARY KEY ("id")
 );
@@ -66,6 +70,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Article_slug_key" ON "Article"("slug");
 
 -- AddForeignKey
 ALTER TABLE "Article" ADD CONSTRAINT "Article_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,8 +1,8 @@
 export interface TArticle {
     title: string;
-    introduction: string;
-    proTip: string;
-    conclusion: string;
+    slug: string;
+    content: any; // Free-form JSON content
+    proTip?: string;
     published: boolean;
     image: string;
     categoryId: number;

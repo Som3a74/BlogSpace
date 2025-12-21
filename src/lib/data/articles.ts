@@ -11,22 +11,7 @@ export async function getArticles() {
             }
         })
 
-        type ArticleType = (typeof articles)[number]
-
-        const formattedArticles = articles.map((article: ArticleType) => {
-            const { introduction, proTip, conclusion, ...rest } = article
-
-            return {
-                ...rest,
-                content: {
-                    introduction,
-                    proTip,
-                    conclusion
-                }
-            }
-        })
-
-        return ResponseHelper.success(formattedArticles, "Articles fetched successfully");
+        return ResponseHelper.success(articles, "Articles fetched successfully");
 
     } catch (error) {
         return ResponseHelper.error(error, 'Internal Server Error', 500, []);
@@ -47,13 +32,7 @@ export async function getArticleById(id: string) {
             return ResponseHelper.error(null, `Article ${id} Not Found`, 404, null);
         }
 
-        const content = {
-            Introduction: article.introduction,
-            ProTip: article.proTip,
-            Conclusion: article.conclusion,
-        };
-
-        return ResponseHelper.success({ ...article, content });
+        return ResponseHelper.success(article);
 
     } catch (error) {
         return ResponseHelper.error(error, "Internal Server Error", 500, null);
@@ -72,9 +51,9 @@ export async function addArticle(data: TArticle) {
         const article = await prisma.article.create({
             data: {
                 title: payload.title,
-                introduction: payload.introduction,
+                slug: payload.slug,
+                content: payload.content,
                 proTip: payload.proTip,
-                conclusion: payload.conclusion,
                 published: payload.published,
                 image: payload.image,
                 categoryId: categoryId,
