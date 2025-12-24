@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ImageIcon, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { UploadButton } from "@/utils/uploadthing";
 import { toast } from "sonner"
+import RichTextEditor from "@/components/toolbars/RichTextEditor"
+import { authClient } from "@/lib/auth-client"
+import { ImageUploadInput } from "./ImageUploadInput"
 
 interface Category {
     id: number
@@ -24,9 +26,12 @@ interface ArticleFormProps {
 
 export function ArticleForm({ categories }: ArticleFormProps) {
     const router = useRouter()
+    const { data: userData } = authClient.useSession()
     const [loading, setLoading] = useState(false)
     const [published, setPublished] = useState(false)
+    const [content, setContent] = useState<string>("")
     const [image, setImage] = useState<string | null>(null)
+    const [slug, setSlug] = useState<string>("")
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -37,33 +42,45 @@ export function ArticleForm({ categories }: ArticleFormProps) {
         const data = {
             title: formData.get("title"),
             slug: formData.get("slug"),
-            content: formData.get("content"),
+            content: content,
             proTip: formData.get("proTip"),
             published,
             categoryId: Number(formData.get("category")),
             image: image,
             createdAt: new Date(),
             updatedAt: new Date(),
-            userId: "cmjemgaoq0000ngdo09u35sei",
+            userId: userData?.user.id,
         }
 
         try {
-            const response: any = await fetch("/api/article", {
+            const response = await fetch("/api/article", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
             })
+
+            const result = await response.json()
             setLoading(false)
-            console.log(response)
-            toast.success(response.message)
-            // await router.push("/dashboard/article")
+
+            if (response.ok) {
+                toast.success(result.message || "Article created successfully")
+                router.push("/dashboard/article")
+            } else {
+                toast.error(result.message || "Something went wrong")
+            }
         } catch (error: any) {
             console.log(error)
             setLoading(false)
-            toast.error(error.message)
+            toast.error("Failed to connect to the server")
         }
+    }
+
+    const slugGenerator = (title: string) => {
+        const slug = title
+        const slugified = slug.replace(/\s+/g, "-").toLowerCase()
+        return slugified
     }
 
     return (
@@ -80,25 +97,28 @@ export function ArticleForm({ categories }: ArticleFormProps) {
                         <CardContent className="space-y-6">
                             <div className="space-y-2">
                                 <Label htmlFor="title">Title</Label>
-                                <Input id="title" name="title" placeholder="Enter article title" required />
+                                <Input id="title" name="title" placeholder="Enter article title" required onChange={(e) => setSlug(slugGenerator(e.target.value))} />
                             </div>
 
-                            {/* slug input */}
                             <div className="space-y-2">
                                 <Label htmlFor="slug">Slug</Label>
-                                <Input id="slug" name="slug" placeholder="Enter article slug" required />
+                                <Input
+                                    id="slug"
+                                    name="slug"
+                                    placeholder="Enter article slug"
+                                    required
+                                    value={slug}
+                                    onChange={(e) => setSlug(e.target.value)}
+                                />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="content">Content</Label>
-                                <Textarea
-                                    id="content"
-                                    name="content"
-                                    placeholder="Write your article content..."
-                                    className="min-h-[100px]"
+                                <RichTextEditor
+                                    content={content}
+                                    onChange={setContent}
                                 />
                             </div>
-
 
                             <div className="space-y-2">
                                 <Label htmlFor="proTip">Pro Tip</Label>
@@ -106,7 +126,7 @@ export function ArticleForm({ categories }: ArticleFormProps) {
                                     id="proTip"
                                     name="proTip"
                                     placeholder="Share a valuable tip..."
-                                    className="min-h-[100px] bg-sky-50 dark:bg-sky-950/20"
+                                    className="min-h-25 bg-sky-50 dark:bg-sky-950/20"
                                 />
                             </div>
 
@@ -151,29 +171,9 @@ export function ArticleForm({ categories }: ArticleFormProps) {
 
                             <div className="space-y-2">
                                 <Label htmlFor="image">Cover Image</Label>
-                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
-                                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-                                        <ImageIcon className="h-6 w-6 text-secondary-foreground" />
-                                    </div>
-                                    <div className="mt-4 flex flex-col items-center justify-center space-y-2">
-                                        <UploadButton
-                                            endpoint="imageUploader"
-                                            onClientUploadComplete={(res) => {
-                                                // console.log("Files: ", res);
-                                                setImage(res[0].ufsUrl)
-                                                toast.success("Upload Completed" + res[0].ufsUrl);
-                                            }}
-                                            onUploadError={(error: Error) => {
-                                                toast.error(`ERROR! ${error.message}`);
-                                            }}
-                                            appearance={{
-                                                button: "underline text-black!",
-                                                allowedContent: "text-primary"
-                                            }}
-                                        />
-                                    </div>
-                                </div>
+                                <ImageUploadInput value={image} onChange={setImage} />
                             </div>
+
                         </CardContent>
                         <CardFooter>
                             <Button className="w-full" disabled={loading}>

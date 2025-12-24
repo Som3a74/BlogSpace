@@ -9,7 +9,6 @@ const AddArticlePage = async () => {
             name: 'asc'
         }
     })
-    console.log(categories)
 
     return (
         <div className="space-y-6">

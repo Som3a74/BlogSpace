@@ -12,7 +12,7 @@ export default function NotFoundPage() {
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">404</h1>
             <h2 className="text-2xl font-semibold tracking-tight">Page Not Found</h2>
 
-            <p className="text-muted-foreground max-w-[500px] text-lg">
+            <p className="text-muted-foreground max-w-125 text-lg">
                 Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or never existed.
             </p>
 

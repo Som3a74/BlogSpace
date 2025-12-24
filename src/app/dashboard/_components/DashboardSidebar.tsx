@@ -68,7 +68,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
         <div
             className={cn(
                 "relative flex flex-col h-full bg-slate-900 text-white transition-all duration-300 ease-in-out",
-                collapsed ? "w-[80px]" : "w-72",
+                collapsed ? "w-20" : "w-72",
                 className
             )}
         >
