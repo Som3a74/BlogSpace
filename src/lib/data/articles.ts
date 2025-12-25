@@ -69,3 +69,57 @@ export async function addArticle(data: TArticle) {
         return ResponseHelper.error(error, 'Internal Server Error', 500, null);
     }
 }
+
+export async function getArticlesByUserId(userId: string) {
+    try {
+        const articles = await prisma.article.findMany({
+            where: { userId: userId },
+            include: {
+                category: { select: { id: true, name: true } }
+            },
+            orderBy: { createdAt: 'desc' }
+        })
+
+        return ResponseHelper.success(articles, "Articles fetched successfully");
+
+    } catch (error) {
+        return ResponseHelper.error(error, 'Internal Server Error', 500, []);
+    }
+}
+
+export async function deleteArticle(id: number) {
+    try {
+        await prisma.article.delete({
+            where: { id }
+        })
+        return ResponseHelper.success(null, "Article deleted successfully");
+    } catch (error) {
+        return ResponseHelper.error(error, 'Internal Server Error', 500, null);
+    }
+}
+
+export async function updateArticle(id: number, data: Partial<TArticle>) {
+    try {
+        const payload = await data;
+        const categoryId = payload.categoryId ? Number(payload.categoryId) : undefined;
+
+        const article = await prisma.article.update({
+            where: { id },
+            data: {
+                title: payload.title,
+                slug: payload.slug,
+                content: payload.content,
+                proTip: payload.proTip,
+                published: payload.published,
+                image: payload.image,
+                categoryId: categoryId,
+                updatedAt: new Date()
+            }
+        })
+
+        return ResponseHelper.success(article, "Article updated successfully");
+
+    } catch (error) {
+        return ResponseHelper.error(error, 'Internal Server Error', 500, null);
+    }
+}

@@ -1,10 +1,10 @@
 export interface TArticle {
     title: string;
     slug: string;
-    content: any; // Free-form JSON content
-    proTip?: string;
+    content: any;
+    proTip: string | null;
     published: boolean;
-    image: string;
+    image: string | null;
     categoryId: number;
     userId: string;
     createdAt: Date;

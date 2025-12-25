@@ -7,6 +7,7 @@ import { AuthorRequestForm } from "./_components/AuthorRequestForm";
 import { User, ShieldCheck, Calendar, Settings2, PenLine, ChevronRight, LayoutGrid } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function ProfilePage() {
     const session = await auth.api.getSession({
@@ -23,28 +24,28 @@ export default async function ProfilePage() {
 
     return (
         <div className="min-h-screen bg-slate-50/40 dark:bg-[#050505]">
-            <div className="max-w-300 mx-auto px-6 py-12 md:py-20 lg:py-24">
-                <div className="flex flex-col lg:flex-row gap-16 items-start">
+            <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-16 lg:py-20">
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
 
                     {/* Left: Quick Profile Card */}
-                    <div className="w-full lg:w-80 space-y-8 lg:sticky lg:top-32 animate-in fade-in slide-in-from-left-4 duration-700">
-                        <div className="space-y-6">
-                            <div className="relative group w-fit">
+                    <div className="w-full lg:w-80 space-y-8 lg:sticky lg:top-32 animate-in fade-in slide-in-from-left-4 duration-700 flex flex-col items-center lg:items-start text-center lg:text-left">
+                        <div className="space-y-6 flex flex-col items-center lg:items-start">
+                            <div className="relative group">
                                 <div className="absolute -inset-1 bg-linear-to-tr from-primary/20 to-primary/0 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <Avatar className="h-24 w-24 ring-2 ring-white dark:ring-slate-900 border border-slate-200 dark:border-white/5 shadow-sm transition-all duration-500 group-hover:scale-[1.02] relative z-10">
-                                    <AvatarImage src={session.user.image || ""} />
+                                <Avatar className="h-24 w-24 ring-2 ring-white dark:ring-slate-900 border border-slate-200 dark:border-white/5 shadow-sm transition-all duration-500 group-hover:scale-[1.02] relative z-10 mx-auto lg:mx-0">
+                                    <AvatarImage className="object-cover" src={session.user.image || ""} />
                                     <AvatarFallback className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-xl font-bold text-primary">
                                         {session.user.name.charAt(0)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-green-500 border-4 border-white dark:border-[#050505] z-20 shadow-sm" />
                             </div>
-                            <div className="space-y-1 px-1">
-                                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-primary transition-colors">{session.user.name}</h2>
-                                <p className="text-sm text-slate-500 font-medium truncate">{session.user.email}</p>
+                            <div className="space-y-1.5 px-1">
+                                <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-primary transition-colors">{session.user.name}</h2>
+                                <p className="text-sm text-slate-500 font-medium truncate max-w-70">{session.user.email}</p>
                             </div>
 
-                            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest pt-2">
+                            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest pt-2 w-full max-w-50 lg:max-w-none">
                                 <span className="text-slate-400">Account Role</span>
                                 <span className="px-2.5 py-0.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                                     {session.user.role}
@@ -62,19 +63,19 @@ export default async function ProfilePage() {
 
                     {/* Right: Main Content Hub */}
                     <div className="flex-1 w-full max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                        <Tabs defaultValue="profile" className="space-y-12">
-                            <div className="flex justify-center md:justify-start">
-                                <TabsList className="bg-slate-100 dark:bg-slate-900/80 p-1.5 h-auto rounded-full border border-slate-200 dark:border-white/5 backdrop-blur-sm self-start">
+                        <Tabs defaultValue="profile" className="space-y-10">
+                            <div className="flex justify-center lg:justify-start w-full overflow-x-auto pb-2 scrollbar-hide">
+                                <TabsList className="bg-slate-100 dark:bg-slate-900/80 p-1.5 h-auto rounded-full border border-slate-200 dark:border-white/5 backdrop-blur-sm">
                                     <TabsTrigger
                                         value="profile"
-                                        className="rounded-full px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400"
+                                        className="rounded-full px-6 md:px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap"
                                     >
                                         <Settings2 className="h-4 w-4" />
                                         Account Settings
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="author"
-                                        className="rounded-full px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400"
+                                        className="rounded-full px-6 md:px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap"
                                     >
                                         <PenLine className="h-4 w-4" />
                                         Author Hub
@@ -100,9 +101,9 @@ export default async function ProfilePage() {
                                                     Your account has verified publishing rights. You can contribute, edit, and manage high-quality content.
                                                 </p>
                                             </div>
-                                            <button className="inline-flex items-center gap-3 text-sm font-black text-primary hover:opacity-70 transition-all group/btn">
+                                            <Link href="/dashboard" className="inline-flex items-center gap-3 text-sm font-black text-primary hover:opacity-70 transition-all group/btn">
                                                 Enter Author Dashboard <ChevronRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                                            </button>
+                                            </Link>
                                         </div>
                                     ) : userRequest ? (
                                         <div className="bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/5 rounded-[2.5rem] p-12 text-center space-y-10 shadow-sm relative overflow-hidden group">

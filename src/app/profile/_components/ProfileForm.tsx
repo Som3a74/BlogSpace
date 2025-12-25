@@ -78,7 +78,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             endpoint="imageUploader"
                             onClientUploadComplete={(res) => {
                                 setImage(res[0].ufsUrl)
-                                toast.success("Signature photo updated")
                             }}
                             onUploadError={(error) => {
                                 toast.error(`Upload failed: ${error.message}`)

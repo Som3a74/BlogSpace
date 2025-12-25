@@ -1,19 +1,25 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+
 import RichTextEditor from "@/components/toolbars/RichTextEditor"
 import { authClient } from "@/lib/auth-client"
 import { ImageUploadInput } from "./ImageUploadInput"
+import { articleSchema, ArticleFormValues } from "@/lib/schemas/article"
+import { TArticle } from "@/types/article"
 
 interface Category {
     id: number
@@ -22,168 +28,223 @@ interface Category {
 
 interface ArticleFormProps {
     categories: Category[]
+    initialData?: (Partial<TArticle> & { id: number } & Record<string, any>) | null
 }
 
-export function ArticleForm({ categories }: ArticleFormProps) {
+export function ArticleForm({ categories, initialData }: ArticleFormProps) {
     const router = useRouter()
     const { data: userData } = authClient.useSession()
-    const [loading, setLoading] = useState(false)
-    const [published, setPublished] = useState(false)
-    const [content, setContent] = useState<string>("")
-    const [image, setImage] = useState<string | null>(null)
-    const [slug, setSlug] = useState<string>("")
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setLoading(true)
-        // await new Promise(resolve => setTimeout(resolve, 2000))
-        const formData = new FormData(e.currentTarget)
+    const form = useForm<ArticleFormValues>({
+        resolver: zodResolver(articleSchema),
+        defaultValues: {
+            title: initialData?.title ?? "",
+            slug: initialData?.slug ?? "",
+            content: initialData?.content ?? "",
+            proTip: initialData?.proTip ?? "",
+            published: initialData?.published ?? false,
+            categoryId: initialData?.categoryId?.toString() ?? "",
+            image: initialData?.image ?? "",
+        },
+    })
 
-        const data = {
-            title: formData.get("title"),
-            slug: formData.get("slug"),
-            content: content,
-            proTip: formData.get("proTip"),
-            published,
-            categoryId: Number(formData.get("category")),
-            image: image,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+    const { watch, setValue, formState: { isSubmitting, dirtyFields } } = form
+
+    const title = watch("title")
+
+    // Auto-generate slug from title
+    useEffect(() => {
+        if (title && !dirtyFields.slug) {
+            const generatedSlug = title
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, "")
+                .replace(/[\s_-]+/g, "-")
+                .replace(/^-+|-+$/g, "")
+
+            setValue("slug", generatedSlug, {
+                shouldValidate: true,
+                shouldDirty: false
+            })
+        }
+    }, [title, setValue, dirtyFields.slug])
+
+    const onSubmit = async (values: ArticleFormValues) => {
+        const payload = {
+            ...values,
+            categoryId: Number(values.categoryId),
             userId: userData?.user.id,
+            updatedAt: new Date(),
+            ...(initialData ? {} : { createdAt: new Date() })
         }
 
         try {
-            const response = await fetch("/api/article", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+            const url = initialData ? `/api/article/${initialData.id}` : "/api/article"
+            const method = initialData ? "PATCH" : "POST"
+
+            const response = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             })
 
             const result = await response.json()
-            setLoading(false)
 
             if (response.ok) {
-                toast.success(result.message || "Article created successfully")
+                toast.success(result.message || (initialData ? "Article updated" : "Article created"))
                 router.push("/dashboard/article")
+                router.refresh()
             } else {
                 toast.error(result.message || "Something went wrong")
             }
-        } catch (error: any) {
-            console.log(error)
-            setLoading(false)
-            toast.error("Failed to connect to the server")
+        } catch (error) {
+            console.error(error)
+            toast.error("Network error")
         }
     }
 
-    const slugGenerator = (title: string) => {
-        const slug = title
-        const slugified = slug.replace(/\s+/g, "-").toLowerCase()
-        return slugified
-    }
-
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
-                <div className="lg:col-span-2 space-y-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Article Details</CardTitle>
-                            <CardDescription>
-                                Give your article a clear title and structure.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Title</Label>
-                                <Input id="title" name="title" placeholder="Enter article title" required onChange={(e) => setSlug(slugGenerator(e.target.value))} />
-                            </div>
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <div className="grid gap-8 grid-cols-1 lg:grid-cols-3">
+                    <div className="lg:col-span-2 space-y-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>{initialData ? "Edit Article" : "New Article"}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Title</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Enter title" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <div className="space-y-2">
-                                <Label htmlFor="slug">Slug</Label>
-                                <Input
-                                    id="slug"
+                                <FormField
+                                    control={form.control}
                                     name="slug"
-                                    placeholder="Enter article slug"
-                                    required
-                                    value={slug}
-                                    onChange={(e) => setSlug(e.target.value)}
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Slug</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="url-friendly-slug" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                            </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="content">Content</Label>
-                                <RichTextEditor
-                                    content={content}
-                                    onChange={setContent}
+                                <FormField
+                                    control={form.control}
+                                    name="content"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Content</FormLabel>
+                                            <FormControl>
+                                                <div className="min-h-80 border rounded-md">
+                                                    <RichTextEditor
+                                                        content={field.value}
+                                                        onChange={field.onChange}
+                                                    />
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                            </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="proTip">Pro Tip</Label>
-                                <Textarea
-                                    id="proTip"
+                                <FormField
+                                    control={form.control}
                                     name="proTip"
-                                    placeholder="Share a valuable tip..."
-                                    className="min-h-25 bg-sky-50 dark:bg-sky-950/20"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Pro Tip (Optional)</FormLabel>
+                                            <FormControl>
+                                                <Textarea
+                                                    placeholder="Share a tip..."
+                                                    className="bg-sky-50 dark:bg-sky-950/20"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
                                 />
-                            </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                        </CardContent>
-                    </Card>
-                </div>
-
-                <div className="space-y-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Publishing</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                    <Label className="text-base">Published</Label>
-                                    <p className="text-sm text-muted-foreground">
-                                        Make this article visible to everyone.
-                                    </p>
-                                </div>
-                                <Switch id="published" name="published"
-                                    checked={published}
-                                    onCheckedChange={setPublished}
+                    <div className="space-y-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Settings</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormField
+                                    control={form.control}
+                                    name="published"
+                                    render={({ field }) => (
+                                        <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                                            <FormLabel>Published</FormLabel>
+                                            <FormControl>
+                                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
                                 />
-                            </div>
 
-                            <div className="space-y-2">
-                                <Label>Category</Label>
-                                <Select name="category">
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a category" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {categories.map((category) => (
-                                            <SelectItem key={category.id} value={category.id.toString()}>
-                                                {category.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                                <FormField
+                                    control={form.control}
+                                    name="categoryId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Category</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger><SelectValue placeholder="Select..." /></SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {categories.map((c) => (
+                                                        <SelectItem key={c.id} value={c.id.toString()}>{c.name}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <div className="space-y-2">
-                                <Label htmlFor="image">Cover Image</Label>
-                                <ImageUploadInput value={image} onChange={setImage} />
-                            </div>
-
-                        </CardContent>
-                        <CardFooter>
-                            <Button className="w-full" disabled={loading}>
-                                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                {loading ? "Saving..." : "Save Article"}
-                            </Button>
-                        </CardFooter>
-                    </Card>
+                                <FormField
+                                    control={form.control}
+                                    name="image"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Cover Image</FormLabel>
+                                            <FormControl>
+                                                <ImageUploadInput value={field.value} onChange={field.onChange} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                            <CardFooter>
+                                <Button className="w-full" disabled={isSubmitting}>
+                                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    {initialData ? "Update Article" : "Create Article"}
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </Form>
     )
 }

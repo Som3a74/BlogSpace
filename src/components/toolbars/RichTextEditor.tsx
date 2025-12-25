@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { BlockquoteToolbar } from "@/components/toolbars/blockquote";
 import { BoldToolbar } from "@/components/toolbars/bold";
 import { BulletListToolbar } from "@/components/toolbars/bullet-list";
@@ -67,13 +69,30 @@ const RichTextEditor = ({ content, onChange, }: RichTextEditorProps) => {
     const editor = useEditor({
         extensions: extensions as Extension[],
         content,
+        editorProps: {
+            attributes: {
+                class: "outline-none min-h-[300px] p-4",
+            },
+        },
         editable: true,
-        onUpdate: () => {
-            const htmlContent = editor?.getHTML() as string;
-            onChange(htmlContent);
+        onUpdate: ({ editor }) => {
+            onChange(editor.getHTML());
         },
         immediatelyRender: false,
     });
+
+    // Update editor content when content prop changes (for edit mode)
+    // Only update if the content is different to avoid cursor jumping and loops
+    useEffect(() => {
+        if (editor && content) {
+            // Only update if editor is empty (initial load scenario) to prevent overwriting user typing
+            // or loop issues. For full bi-directional sync, we need deeper comparison.
+            // Given the use case is "Loading initial data", checking isEmpty on first load is usually safer.
+            if (editor.isEmpty) {
+                editor.commands.setContent(content)
+            }
+        }
+    }, [content, editor]);
 
     if (!editor) {
         return null;
