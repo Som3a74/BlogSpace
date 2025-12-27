@@ -5,16 +5,39 @@ import { TArticle } from '@/types/article'
 export async function getArticles() {
     try {
         const articles = await prisma.article.findMany({
+            where: { published: true },
             include: {
                 user: { select: { id: true, name: true } },
                 category: { select: { id: true, name: true } }
-            }
+            },
+            orderBy: { createdAt: 'desc' }
         })
 
         return ResponseHelper.success(articles, "Articles fetched successfully");
 
     } catch (error) {
         return ResponseHelper.error(error, 'Internal Server Error', 500, []);
+    }
+}
+
+export async function getArticleBySlug(slug: string) {
+    try {
+        const article = await prisma.article.findUnique({
+            where: { slug: slug },
+            include: {
+                user: { select: { id: true, name: true } },
+                category: { select: { id: true, name: true } }
+            }
+        });
+
+        if (!article) {
+            return ResponseHelper.error(null, `Article ${slug} Not Found`, 404, null);
+        }
+
+        return ResponseHelper.success(article);
+
+    } catch (error) {
+        return ResponseHelper.error(error, "Internal Server Error", 500, null);
     }
 }
 

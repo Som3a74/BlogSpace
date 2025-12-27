@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Category: 'Category',
   Article: 'Article',
+  SavedArticle: 'SavedArticle',
   Comment: 'Comment',
   Like: 'Like',
   Session: 'Session',
@@ -113,10 +114,21 @@ export const ArticleScalarFieldEnum = {
   image: 'image',
   categoryId: 'categoryId',
   content: 'content',
-  proTip: 'proTip'
+  proTip: 'proTip',
+  views: 'views'
 } as const
 
 export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
+
+
+export const SavedArticleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  articleId: 'articleId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedArticleScalarFieldEnum = (typeof SavedArticleScalarFieldEnum)[keyof typeof SavedArticleScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {

@@ -29,11 +29,13 @@ export type AggregateArticle = {
 export type ArticleAvgAggregateOutputType = {
   id: number | null
   categoryId: number | null
+  views: number | null
 }
 
 export type ArticleSumAggregateOutputType = {
   id: number | null
   categoryId: number | null
+  views: number | null
 }
 
 export type ArticleMinAggregateOutputType = {
@@ -47,6 +49,7 @@ export type ArticleMinAggregateOutputType = {
   image: string | null
   categoryId: number | null
   proTip: string | null
+  views: number | null
 }
 
 export type ArticleMaxAggregateOutputType = {
@@ -60,6 +63,7 @@ export type ArticleMaxAggregateOutputType = {
   image: string | null
   categoryId: number | null
   proTip: string | null
+  views: number | null
 }
 
 export type ArticleCountAggregateOutputType = {
@@ -74,6 +78,7 @@ export type ArticleCountAggregateOutputType = {
   categoryId: number
   content: number
   proTip: number
+  views: number
   _all: number
 }
 
@@ -81,11 +86,13 @@ export type ArticleCountAggregateOutputType = {
 export type ArticleAvgAggregateInputType = {
   id?: true
   categoryId?: true
+  views?: true
 }
 
 export type ArticleSumAggregateInputType = {
   id?: true
   categoryId?: true
+  views?: true
 }
 
 export type ArticleMinAggregateInputType = {
@@ -99,6 +106,7 @@ export type ArticleMinAggregateInputType = {
   image?: true
   categoryId?: true
   proTip?: true
+  views?: true
 }
 
 export type ArticleMaxAggregateInputType = {
@@ -112,6 +120,7 @@ export type ArticleMaxAggregateInputType = {
   image?: true
   categoryId?: true
   proTip?: true
+  views?: true
 }
 
 export type ArticleCountAggregateInputType = {
@@ -126,6 +135,7 @@ export type ArticleCountAggregateInputType = {
   categoryId?: true
   content?: true
   proTip?: true
+  views?: true
   _all?: true
 }
 
@@ -227,6 +237,7 @@ export type ArticleGroupByOutputType = {
   categoryId: number
   content: runtime.JsonValue
   proTip: string | null
+  views: number
   _count: ArticleCountAggregateOutputType | null
   _avg: ArticleAvgAggregateOutputType | null
   _sum: ArticleSumAggregateOutputType | null
@@ -264,10 +275,12 @@ export type ArticleWhereInput = {
   categoryId?: Prisma.IntFilter<"Article"> | number
   content?: Prisma.JsonFilter<"Article">
   proTip?: Prisma.StringNullableFilter<"Article"> | string | null
+  views?: Prisma.IntFilter<"Article"> | number
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comments?: Prisma.CommentListRelationFilter
   likes?: Prisma.LikeListRelationFilter
+  savedBy?: Prisma.SavedArticleListRelationFilter
 }
 
 export type ArticleOrderByWithRelationInput = {
@@ -282,10 +295,12 @@ export type ArticleOrderByWithRelationInput = {
   categoryId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   proTip?: Prisma.SortOrderInput | Prisma.SortOrder
+  views?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   likes?: Prisma.LikeOrderByRelationAggregateInput
+  savedBy?: Prisma.SavedArticleOrderByRelationAggregateInput
 }
 
 export type ArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -303,10 +318,12 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   categoryId?: Prisma.IntFilter<"Article"> | number
   content?: Prisma.JsonFilter<"Article">
   proTip?: Prisma.StringNullableFilter<"Article"> | string | null
+  views?: Prisma.IntFilter<"Article"> | number
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comments?: Prisma.CommentListRelationFilter
   likes?: Prisma.LikeListRelationFilter
+  savedBy?: Prisma.SavedArticleListRelationFilter
 }, "id" | "slug">
 
 export type ArticleOrderByWithAggregationInput = {
@@ -321,6 +338,7 @@ export type ArticleOrderByWithAggregationInput = {
   categoryId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   proTip?: Prisma.SortOrderInput | Prisma.SortOrder
+  views?: Prisma.SortOrder
   _count?: Prisma.ArticleCountOrderByAggregateInput
   _avg?: Prisma.ArticleAvgOrderByAggregateInput
   _max?: Prisma.ArticleMaxOrderByAggregateInput
@@ -343,6 +361,7 @@ export type ArticleScalarWhereWithAggregatesInput = {
   categoryId?: Prisma.IntWithAggregatesFilter<"Article"> | number
   content?: Prisma.JsonWithAggregatesFilter<"Article">
   proTip?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
+  views?: Prisma.IntWithAggregatesFilter<"Article"> | number
 }
 
 export type ArticleCreateInput = {
@@ -354,10 +373,12 @@ export type ArticleCreateInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   category: Prisma.CategoryCreateNestedOneWithoutArticlesInput
   user: Prisma.UserCreateNestedOneWithoutArticlesInput
   comments?: Prisma.CommentCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateInput = {
@@ -372,8 +393,10 @@ export type ArticleUncheckedCreateInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUpdateInput = {
@@ -385,10 +408,12 @@ export type ArticleUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.CategoryUpdateOneRequiredWithoutArticlesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutArticlesNestedInput
   comments?: Prisma.CommentUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateInput = {
@@ -403,8 +428,10 @@ export type ArticleUncheckedUpdateInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   comments?: Prisma.CommentUncheckedUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateManyInput = {
@@ -419,6 +446,7 @@ export type ArticleCreateManyInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
 }
 
 export type ArticleUpdateManyMutationInput = {
@@ -430,6 +458,7 @@ export type ArticleUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ArticleUncheckedUpdateManyInput = {
@@ -444,6 +473,7 @@ export type ArticleUncheckedUpdateManyInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ArticleListRelationFilter = {
@@ -468,11 +498,13 @@ export type ArticleCountOrderByAggregateInput = {
   categoryId?: Prisma.SortOrder
   content?: Prisma.SortOrder
   proTip?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type ArticleAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type ArticleMaxOrderByAggregateInput = {
@@ -486,6 +518,7 @@ export type ArticleMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   proTip?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type ArticleMinOrderByAggregateInput = {
@@ -499,11 +532,13 @@ export type ArticleMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   proTip?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type ArticleSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
+  views?: Prisma.SortOrder
 }
 
 export type ArticleScalarRelationFilter = {
@@ -595,6 +630,20 @@ export type ArticleUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.ArticleScalarWhereInput | Prisma.ArticleScalarWhereInput[]
 }
 
+export type ArticleCreateNestedOneWithoutSavedByInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutSavedByInput, Prisma.ArticleUncheckedCreateWithoutSavedByInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutSavedByInput
+  connect?: Prisma.ArticleWhereUniqueInput
+}
+
+export type ArticleUpdateOneRequiredWithoutSavedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ArticleCreateWithoutSavedByInput, Prisma.ArticleUncheckedCreateWithoutSavedByInput>
+  connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutSavedByInput
+  upsert?: Prisma.ArticleUpsertWithoutSavedByInput
+  connect?: Prisma.ArticleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ArticleUpdateToOneWithWhereWithoutSavedByInput, Prisma.ArticleUpdateWithoutSavedByInput>, Prisma.ArticleUncheckedUpdateWithoutSavedByInput>
+}
+
 export type ArticleCreateNestedOneWithoutCommentsInput = {
   create?: Prisma.XOR<Prisma.ArticleCreateWithoutCommentsInput, Prisma.ArticleUncheckedCreateWithoutCommentsInput>
   connectOrCreate?: Prisma.ArticleCreateOrConnectWithoutCommentsInput
@@ -632,9 +681,11 @@ export type ArticleCreateWithoutUserInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   category: Prisma.CategoryCreateNestedOneWithoutArticlesInput
   comments?: Prisma.CommentCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutUserInput = {
@@ -648,8 +699,10 @@ export type ArticleUncheckedCreateWithoutUserInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutUserInput = {
@@ -693,6 +746,7 @@ export type ArticleScalarWhereInput = {
   categoryId?: Prisma.IntFilter<"Article"> | number
   content?: Prisma.JsonFilter<"Article">
   proTip?: Prisma.StringNullableFilter<"Article"> | string | null
+  views?: Prisma.IntFilter<"Article"> | number
 }
 
 export type ArticleCreateWithoutCategoryInput = {
@@ -704,9 +758,11 @@ export type ArticleCreateWithoutCategoryInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   user: Prisma.UserCreateNestedOneWithoutArticlesInput
   comments?: Prisma.CommentCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutCategoryInput = {
@@ -720,8 +776,10 @@ export type ArticleUncheckedCreateWithoutCategoryInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutArticleInput
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutCategoryInput = {
@@ -750,6 +808,88 @@ export type ArticleUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.ArticleUpdateManyMutationInput, Prisma.ArticleUncheckedUpdateManyWithoutCategoryInput>
 }
 
+export type ArticleCreateWithoutSavedByInput = {
+  slug: string
+  title?: string
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  image?: string | null
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  proTip?: string | null
+  views?: number
+  category: Prisma.CategoryCreateNestedOneWithoutArticlesInput
+  user: Prisma.UserCreateNestedOneWithoutArticlesInput
+  comments?: Prisma.CommentCreateNestedManyWithoutArticleInput
+  likes?: Prisma.LikeCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleUncheckedCreateWithoutSavedByInput = {
+  id?: number
+  slug: string
+  title?: string
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
+  image?: string | null
+  categoryId: number
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  proTip?: string | null
+  views?: number
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutArticleInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutArticleInput
+}
+
+export type ArticleCreateOrConnectWithoutSavedByInput = {
+  where: Prisma.ArticleWhereUniqueInput
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutSavedByInput, Prisma.ArticleUncheckedCreateWithoutSavedByInput>
+}
+
+export type ArticleUpsertWithoutSavedByInput = {
+  update: Prisma.XOR<Prisma.ArticleUpdateWithoutSavedByInput, Prisma.ArticleUncheckedUpdateWithoutSavedByInput>
+  create: Prisma.XOR<Prisma.ArticleCreateWithoutSavedByInput, Prisma.ArticleUncheckedCreateWithoutSavedByInput>
+  where?: Prisma.ArticleWhereInput
+}
+
+export type ArticleUpdateToOneWithWhereWithoutSavedByInput = {
+  where?: Prisma.ArticleWhereInput
+  data: Prisma.XOR<Prisma.ArticleUpdateWithoutSavedByInput, Prisma.ArticleUncheckedUpdateWithoutSavedByInput>
+}
+
+export type ArticleUpdateWithoutSavedByInput = {
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  category?: Prisma.CategoryUpdateOneRequiredWithoutArticlesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutArticlesNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutArticleNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutArticleNestedInput
+}
+
+export type ArticleUncheckedUpdateWithoutSavedByInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryId?: Prisma.IntFieldUpdateOperationsInput | number
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutArticleNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutArticleNestedInput
+}
+
 export type ArticleCreateWithoutCommentsInput = {
   slug: string
   title?: string
@@ -759,9 +899,11 @@ export type ArticleCreateWithoutCommentsInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   category: Prisma.CategoryCreateNestedOneWithoutArticlesInput
   user: Prisma.UserCreateNestedOneWithoutArticlesInput
   likes?: Prisma.LikeCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutCommentsInput = {
@@ -776,7 +918,9 @@ export type ArticleUncheckedCreateWithoutCommentsInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   likes?: Prisma.LikeUncheckedCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutCommentsInput = {
@@ -804,9 +948,11 @@ export type ArticleUpdateWithoutCommentsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.CategoryUpdateOneRequiredWithoutArticlesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutArticlesNestedInput
   likes?: Prisma.LikeUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutCommentsInput = {
@@ -821,7 +967,9 @@ export type ArticleUncheckedUpdateWithoutCommentsInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   likes?: Prisma.LikeUncheckedUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateWithoutLikesInput = {
@@ -833,9 +981,11 @@ export type ArticleCreateWithoutLikesInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   category: Prisma.CategoryCreateNestedOneWithoutArticlesInput
   user: Prisma.UserCreateNestedOneWithoutArticlesInput
   comments?: Prisma.CommentCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleUncheckedCreateWithoutLikesInput = {
@@ -850,7 +1000,9 @@ export type ArticleUncheckedCreateWithoutLikesInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutArticleInput
+  savedBy?: Prisma.SavedArticleUncheckedCreateNestedManyWithoutArticleInput
 }
 
 export type ArticleCreateOrConnectWithoutLikesInput = {
@@ -878,9 +1030,11 @@ export type ArticleUpdateWithoutLikesInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.CategoryUpdateOneRequiredWithoutArticlesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutArticlesNestedInput
   comments?: Prisma.CommentUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutLikesInput = {
@@ -895,7 +1049,9 @@ export type ArticleUncheckedUpdateWithoutLikesInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   comments?: Prisma.CommentUncheckedUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleCreateManyUserInput = {
@@ -909,6 +1065,7 @@ export type ArticleCreateManyUserInput = {
   categoryId: number
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
 }
 
 export type ArticleUpdateWithoutUserInput = {
@@ -920,9 +1077,11 @@ export type ArticleUpdateWithoutUserInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   category?: Prisma.CategoryUpdateOneRequiredWithoutArticlesNestedInput
   comments?: Prisma.CommentUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutUserInput = {
@@ -936,8 +1095,10 @@ export type ArticleUncheckedUpdateWithoutUserInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   comments?: Prisma.CommentUncheckedUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateManyWithoutUserInput = {
@@ -951,6 +1112,7 @@ export type ArticleUncheckedUpdateManyWithoutUserInput = {
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ArticleCreateManyCategoryInput = {
@@ -964,6 +1126,7 @@ export type ArticleCreateManyCategoryInput = {
   image?: string | null
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: string | null
+  views?: number
 }
 
 export type ArticleUpdateWithoutCategoryInput = {
@@ -975,9 +1138,11 @@ export type ArticleUpdateWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutArticlesNestedInput
   comments?: Prisma.CommentUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateWithoutCategoryInput = {
@@ -991,8 +1156,10 @@ export type ArticleUncheckedUpdateWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
   comments?: Prisma.CommentUncheckedUpdateManyWithoutArticleNestedInput
   likes?: Prisma.LikeUncheckedUpdateManyWithoutArticleNestedInput
+  savedBy?: Prisma.SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
 }
 
 export type ArticleUncheckedUpdateManyWithoutCategoryInput = {
@@ -1006,6 +1173,7 @@ export type ArticleUncheckedUpdateManyWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   proTip?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  views?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1016,11 +1184,13 @@ export type ArticleUncheckedUpdateManyWithoutCategoryInput = {
 export type ArticleCountOutputType = {
   comments: number
   likes: number
+  savedBy: number
 }
 
 export type ArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   comments?: boolean | ArticleCountOutputTypeCountCommentsArgs
   likes?: boolean | ArticleCountOutputTypeCountLikesArgs
+  savedBy?: boolean | ArticleCountOutputTypeCountSavedByArgs
 }
 
 /**
@@ -1047,6 +1217,13 @@ export type ArticleCountOutputTypeCountLikesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.LikeWhereInput
 }
 
+/**
+ * ArticleCountOutputType without action
+ */
+export type ArticleCountOutputTypeCountSavedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedArticleWhereInput
+}
+
 
 export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1060,10 +1237,12 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   categoryId?: boolean
   content?: boolean
   proTip?: boolean
+  views?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comments?: boolean | Prisma.Article$commentsArgs<ExtArgs>
   likes?: boolean | Prisma.Article$likesArgs<ExtArgs>
+  savedBy?: boolean | Prisma.Article$savedByArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["article"]>
 
@@ -1079,6 +1258,7 @@ export type ArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   categoryId?: boolean
   content?: boolean
   proTip?: boolean
+  views?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["article"]>
@@ -1095,6 +1275,7 @@ export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   categoryId?: boolean
   content?: boolean
   proTip?: boolean
+  views?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["article"]>
@@ -1111,14 +1292,16 @@ export type ArticleSelectScalar = {
   categoryId?: boolean
   content?: boolean
   proTip?: boolean
+  views?: boolean
 }
 
-export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "published" | "createdAt" | "updatedAt" | "userId" | "image" | "categoryId" | "content" | "proTip", ExtArgs["result"]["article"]>
+export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "published" | "createdAt" | "updatedAt" | "userId" | "image" | "categoryId" | "content" | "proTip" | "views", ExtArgs["result"]["article"]>
 export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comments?: boolean | Prisma.Article$commentsArgs<ExtArgs>
   likes?: boolean | Prisma.Article$likesArgs<ExtArgs>
+  savedBy?: boolean | Prisma.Article$savedByArgs<ExtArgs>
   _count?: boolean | Prisma.ArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ArticleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1137,6 +1320,7 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     user: Prisma.$UserPayload<ExtArgs>
     comments: Prisma.$CommentPayload<ExtArgs>[]
     likes: Prisma.$LikePayload<ExtArgs>[]
+    savedBy: Prisma.$SavedArticlePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1150,6 +1334,7 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     categoryId: number
     content: runtime.JsonValue
     proTip: string | null
+    views: number
   }, ExtArgs["result"]["article"]>
   composites: {}
 }
@@ -1548,6 +1733,7 @@ export interface Prisma__ArticleClient<T, Null = never, ExtArgs extends runtime.
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   comments<T extends Prisma.Article$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   likes<T extends Prisma.Article$likesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$likesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedBy<T extends Prisma.Article$savedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Article$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1588,6 +1774,7 @@ export interface ArticleFieldRefs {
   readonly categoryId: Prisma.FieldRef<"Article", 'Int'>
   readonly content: Prisma.FieldRef<"Article", 'Json'>
   readonly proTip: Prisma.FieldRef<"Article", 'String'>
+  readonly views: Prisma.FieldRef<"Article", 'Int'>
 }
     
 
@@ -2029,6 +2216,30 @@ export type Article$likesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.LikeScalarFieldEnum | Prisma.LikeScalarFieldEnum[]
+}
+
+/**
+ * Article.savedBy
+ */
+export type Article$savedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedArticle
+   */
+  select?: Prisma.SavedArticleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedArticle
+   */
+  omit?: Prisma.SavedArticleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedArticleInclude<ExtArgs> | null
+  where?: Prisma.SavedArticleWhereInput
+  orderBy?: Prisma.SavedArticleOrderByWithRelationInput | Prisma.SavedArticleOrderByWithRelationInput[]
+  cursor?: Prisma.SavedArticleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedArticleScalarFieldEnum | Prisma.SavedArticleScalarFieldEnum[]
 }
 
 /**

@@ -41,6 +41,7 @@ const Page = async () => {
                         {articles.data?.map((post: any) => (
                             <BlogCard
                                 id={post.id}
+                                slug={post.slug}
                                 key={post.id}
                                 title={post.title}
                                 content={post.content}

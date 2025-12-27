@@ -4,10 +4,12 @@ import { redirect } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileForm } from "./_components/ProfileForm";
 import { AuthorRequestForm } from "./_components/AuthorRequestForm";
-import { User, ShieldCheck, Calendar, Settings2, PenLine, ChevronRight, LayoutGrid, XCircle } from "lucide-react";
+import { SavedArticlesList } from "./_components/SavedArticlesList";
+import { User, ShieldCheck, Calendar, Settings2, PenLine, ChevronRight, LayoutGrid, XCircle, Bookmark, MessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import { UserCommentsList } from "./_components/UserCommentsList";
 
 export default async function ProfilePage() {
     const session = await auth.api.getSession({
@@ -21,7 +23,35 @@ export default async function ProfilePage() {
     const userRequest = await prisma.authorRequest.findUnique({
         where: { userId: session.user.id }
     });
-    console.log(userRequest)
+
+    const savedArticles = await prisma.savedArticle.findMany({
+        where: { userId: session.user.id },
+        include: {
+            article: {
+                include: {
+                    category: true
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
+
+    const userComments = await prisma.comment.findMany({
+        where: { userId: session.user.id },
+        include: {
+            article: {
+                select: {
+                    title: true,
+                    slug: true
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
 
     return (
         <div className="min-h-screen bg-slate-50/40 dark:bg-[#050505]">
@@ -72,7 +102,21 @@ export default async function ProfilePage() {
                                         className="rounded-full px-6 md:px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap"
                                     >
                                         <Settings2 className="h-4 w-4" />
-                                        Account Settings
+                                        Settings
+                                    </TabsTrigger>
+                                    <TabsTrigger
+                                        value="saved"
+                                        className="rounded-full px-6 md:px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap"
+                                    >
+                                        <Bookmark className="h-4 w-4" />
+                                        Saved
+                                    </TabsTrigger>
+                                    <TabsTrigger
+                                        value="comments"
+                                        className="rounded-full px-6 md:px-10 py-3 data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 font-bold text-sm flex items-center gap-2.5 text-slate-500 dark:text-slate-400 whitespace-nowrap"
+                                    >
+                                        <MessageSquare className="h-4 w-4" />
+                                        Comments
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="author"
@@ -87,6 +131,14 @@ export default async function ProfilePage() {
                             <div className="pt-2">
                                 <TabsContent value="profile" className="focus-visible:ring-0 outline-none">
                                     <ProfileForm user={session.user} />
+                                </TabsContent>
+
+                                <TabsContent value="saved" className="focus-visible:ring-0 outline-none">
+                                    <SavedArticlesList savedArticles={savedArticles} />
+                                </TabsContent>
+
+                                <TabsContent value="comments" className="focus-visible:ring-0 outline-none">
+                                    <UserCommentsList comments={userComments} />
                                 </TabsContent>
 
                                 <TabsContent value="author" className="focus-visible:ring-0 outline-none">
@@ -154,3 +206,4 @@ export default async function ProfilePage() {
         </div>
     );
 }
+

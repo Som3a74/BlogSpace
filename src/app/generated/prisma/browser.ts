@@ -33,6 +33,11 @@ export type Category = Prisma.CategoryModel
  */
 export type Article = Prisma.ArticleModel
 /**
+ * Model SavedArticle
+ * 
+ */
+export type SavedArticle = Prisma.SavedArticleModel
+/**
  * Model Comment
  * 
  */

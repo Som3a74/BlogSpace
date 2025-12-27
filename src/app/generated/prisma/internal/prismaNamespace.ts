@@ -387,6 +387,7 @@ export const ModelName = {
   User: 'User',
   Category: 'Category',
   Article: 'Article',
+  SavedArticle: 'SavedArticle',
   Comment: 'Comment',
   Like: 'Like',
   Session: 'Session',
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "article" | "comment" | "like" | "session" | "account" | "verification" | "authorRequest"
+    modelProps: "user" | "category" | "article" | "savedArticle" | "comment" | "like" | "session" | "account" | "verification" | "authorRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -631,6 +632,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ArticleCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ArticleCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedArticle: {
+      payload: Prisma.$SavedArticlePayload<ExtArgs>
+      fields: Prisma.SavedArticleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedArticleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedArticleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        findFirst: {
+          args: Prisma.SavedArticleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedArticleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        findMany: {
+          args: Prisma.SavedArticleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>[]
+        }
+        create: {
+          args: Prisma.SavedArticleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        createMany: {
+          args: Prisma.SavedArticleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedArticleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>[]
+        }
+        delete: {
+          args: Prisma.SavedArticleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        update: {
+          args: Prisma.SavedArticleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedArticleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedArticleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedArticleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedArticleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedArticlePayload>
+        }
+        aggregate: {
+          args: Prisma.SavedArticleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedArticle>
+        }
+        groupBy: {
+          args: Prisma.SavedArticleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedArticleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedArticleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedArticleCountAggregateOutputType> | number
         }
       }
     }
@@ -1152,10 +1227,21 @@ export const ArticleScalarFieldEnum = {
   image: 'image',
   categoryId: 'categoryId',
   content: 'content',
-  proTip: 'proTip'
+  proTip: 'proTip',
+  views: 'views'
 } as const
 
 export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
+
+
+export const SavedArticleScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  articleId: 'articleId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedArticleScalarFieldEnum = (typeof SavedArticleScalarFieldEnum)[keyof typeof SavedArticleScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
@@ -1487,6 +1573,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   category?: Prisma.CategoryOmit
   article?: Prisma.ArticleOmit
+  savedArticle?: Prisma.SavedArticleOmit
   comment?: Prisma.CommentOmit
   like?: Prisma.LikeOmit
   session?: Prisma.SessionOmit

@@ -2,8 +2,9 @@ export type ServiceResponse<T> = {
     success: boolean;
     message: string;
     data?: T;
-    error?: string | object;
+    error?: string | any;
     status: number;
+    code: number;
 };
 
 export class ResponseHelper {
@@ -15,7 +16,8 @@ export class ResponseHelper {
             success: true,
             data,
             message,
-            status
+            status: Number(status),
+            code: Number(status)
         };
     }
 
@@ -32,22 +34,24 @@ export class ResponseHelper {
         status: number = 500,
         data: T | null = null
     ): ServiceResponse<T | null> {
-        let errorMessage: string | object = 'Unknown Error';
+        let extractedError: any = 'Unknown Error';
 
-        if (error instanceof Error) {
-            errorMessage = error.message;
-        } else if (typeof error === 'string') {
-            errorMessage = error;
-        } else if (typeof error === 'object' && error !== null) {
-            errorMessage = error;
+        if (typeof error === 'string') {
+            extractedError = error;
+        } else if (error instanceof Error) {
+            extractedError = error.message;
+        } else if (error && typeof error === 'object') {
+            // Extract message and avoid returning raw objects with string codes (like Prisma/Better-Auth codes)
+            extractedError = (error as any).message || (error as any).errors || JSON.stringify(error);
         }
 
         return {
             success: false,
-            message,
-            error: errorMessage,
+            message: message || (typeof extractedError === 'string' ? extractedError : 'Error'),
+            error: extractedError,
             data: data,
-            status
+            status: Number(status),
+            code: Number(status)
         };
     }
 }

@@ -13,6 +13,8 @@ export interface BlogCardProps {
         id: string
         name: string
     }
+    slug: string
     id: string
+    views?: number
     className?: string
 }

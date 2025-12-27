@@ -52,6 +52,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
         }
     }
 
+    const isDirty = name !== user.name || image !== (user.image || "")
+
     return (
         <div className="space-y-12">
             <form onSubmit={handleSubmit} className="space-y-12">
@@ -129,7 +131,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <div className="flex justify-center sm:justify-start pt-6">
                     <Button
                         type="submit"
-                        disabled={loading}
+                        disabled={loading || !isDirty}
                         className="bg-primary text-white h-11 px-10 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all disabled:opacity-50"
                     >
                         {loading ? (

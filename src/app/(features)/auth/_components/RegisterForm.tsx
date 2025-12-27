@@ -1,80 +1,97 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client";
+import { registerSchema } from "@/lib/validations/api-schemas"
+import { z } from "zod"
+
+type RegisterFormValues = z.infer<typeof registerSchema>
 
 export function RegisterForm() {
     const [loading, setLoading] = useState(false)
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterFormValues>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            password: "",
+        },
+    })
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        const formData = new FormData(e.currentTarget)
-        const name = formData.get("name")
-        const email = formData.get("email")
-        const password = formData.get("password")
-
-        const { data, error } = await authClient.signUp.email({
-            email: email as string,
-            password: password as string,
-            name: name as string,
+    const onSubmit = async (values: RegisterFormValues) => {
+        await authClient.signUp.email({
+            email: values.email,
+            password: values.password,
+            name: values.name,
             callbackURL: "/"
         }, {
-            onRequest: (ctx) => {
-                console.log(ctx);
+            onRequest: () => {
                 setLoading(true)
             },
             onSuccess: (ctx) => {
-                console.log(ctx);
-                toast.success("Account created successfully" + ctx.data.user.name)
+                toast.success("Account created successfully, welcome " + ctx.data.user.name)
             },
             onError: (ctx) => {
-                console.log(ctx);
-                toast.error(ctx.error.statusText);
+                toast.error(ctx.error.message || "Something went wrong");
+                setLoading(false)
             },
         });
-        setLoading(false)
-        console.log(data);
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
                     id="name"
-                    name="name"
                     placeholder="John Doe"
-                    required
+                    {...register("name")}
                     disabled={loading}
+                    className={errors.name ? "border-red-500" : ""}
                 />
+                {errors.name && (
+                    <p className="text-xs text-red-500">{errors.name.message}</p>
+                )}
             </div>
             <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                     id="email"
-                    name="email"
                     type="email"
                     placeholder="m@example.com"
-                    required
+                    {...register("email")}
                     disabled={loading}
+                    className={errors.email ? "border-red-500" : ""}
                 />
+                {errors.email && (
+                    <p className="text-xs text-red-500">{errors.email.message}</p>
+                )}
             </div>
             <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                     id="password"
-                    name="password"
                     type="password"
-                    required
+                    {...register("password")}
                     disabled={loading}
+                    placeholder="* * * * * * * *"
+                    className={errors.password ? "border-red-500" : ""}
                 />
+                {errors.password && (
+                    <p className="text-xs text-red-500">{errors.password.message}</p>
+                )}
             </div>
             <Button className="w-full" type="submit" disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

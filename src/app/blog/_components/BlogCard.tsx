@@ -2,12 +2,13 @@ import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, ArrowRight } from "lucide-react"
+import { Calendar, ArrowRight, Eye } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { dataFormat } from '@/utils/dataFormat'
 import { BlogCardProps } from '../types/blogTypes'
 
 const BlogCard = ({
+    id,
     title,
     content,
     category,
@@ -15,7 +16,8 @@ const BlogCard = ({
     updatedAt,
     createdAt,
     user = { id: "#", name: "John Doe", avatar: "" },
-    id = "#",
+    slug = "#",
+    views = 0,
     className
 }: BlogCardProps) => {
     return (
@@ -30,17 +32,19 @@ const BlogCard = ({
                 <Badge className="absolute top-4 left-4 z-20">{category.name}</Badge>
             </div>
             <CardHeader className="pb-4">
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {dataFormat(createdAt)}</span>
-                    <span>•</span>
+                    <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {views} views</span>
                 </div>
-                <Link href={`/blog/${id}`} className="group-hover:text-primary transition-colors">
+                <Link href={`/blog/${slug}`} className="group-hover:text-primary transition-colors">
                     <h3 className="text-xl font-bold leading-tight line-clamp-2">{title}</h3>
                 </Link>
             </CardHeader>
             <CardContent className="flex-1 pb-4">
                 <p className="text-muted-foreground line-clamp-3 text-sm">
-                    {content?.introduction}
+                    {typeof content === 'string'
+                        ? content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "..."
+                        : "No content available."}
                 </p>
             </CardContent>
             <CardFooter className="pt-0 flex items-center justify-between">
@@ -51,7 +55,7 @@ const BlogCard = ({
                     {user.name}
                 </div>
                 <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80 p-0 hover:bg-transparent" asChild>
-                    <Link href={`/blog/${id}`}>
+                    <Link href={`/blog/${slug}`}>
                         Read More <ArrowRight className="h-4 w-4" />
                     </Link>
                 </Button>

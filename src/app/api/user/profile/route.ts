@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { ResponseHelper } from "@/lib/api-response";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { updateProfileSchema } from "@/lib/validations/api-schemas";
 
 export async function PATCH(req: NextRequest) {
     try {
@@ -11,10 +12,19 @@ export async function PATCH(req: NextRequest) {
         });
 
         if (!session) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            const res = ResponseHelper.error(null, "Unauthorized", 401);
+            return NextResponse.json(res, { status: res.status });
         }
 
-        const { name, image } = await req.json();
+        const body = await req.json();
+        const validation = updateProfileSchema.safeParse(body);
+
+        if (!validation.success) {
+            const res = ResponseHelper.error(validation.error.flatten(), "Validation Error", 400);
+            return NextResponse.json(res, { status: res.status });
+        }
+
+        const { name, image } = validation.data;
 
         const updatedUser = await prisma.user.update({
             where: { id: session.user.id },
@@ -24,9 +34,11 @@ export async function PATCH(req: NextRequest) {
             }
         });
 
-        return NextResponse.json(ResponseHelper.success(updatedUser, "Profile updated successfully"));
+        const res = ResponseHelper.success(updatedUser, "Profile updated successfully");
+        return NextResponse.json(res, { status: res.status });
     } catch (error) {
         console.error(error);
-        return NextResponse.json(ResponseHelper.error(error, "Internal Server Error"), { status: 500 });
+        const res = ResponseHelper.error(error);
+        return NextResponse.json(res, { status: res.status });
     }
 }

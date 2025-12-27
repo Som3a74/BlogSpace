@@ -9,4 +9,5 @@ export interface TArticle {
     userId: string;
     createdAt: Date;
     updatedAt: Date;
+    views: number;
 }

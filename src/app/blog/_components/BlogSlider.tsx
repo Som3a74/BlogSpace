@@ -32,6 +32,7 @@ const BlogSlider = ({ blogs }: { blogs: any }) => {
                             <div className="p-1 h-full">
                                 <BlogCard
                                     id={post.id}
+                                    slug={post.slug}
                                     title={post.title}
                                     content={post.content}
                                     image={post.image}

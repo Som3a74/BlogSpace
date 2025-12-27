@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { ResponseHelper } from "@/lib/api-response";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { authorRequestSchema, updateAuthorRequestSchema } from "@/lib/validations/api-schemas";
 
 export async function GET(req: NextRequest) {
     try {
@@ -11,7 +12,8 @@ export async function GET(req: NextRequest) {
         });
 
         if (!session || (session.user as any).role !== "ADMIN") {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            const res = ResponseHelper.error(null, "Unauthorized", 401);
+            return NextResponse.json(res, { status: res.status });
         }
 
         const authorRequests = await prisma.authorRequest.findMany({
@@ -29,10 +31,12 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        return NextResponse.json(ResponseHelper.success(authorRequests, "Requests fetched successfully"));
+        const res = ResponseHelper.success(authorRequests, "Requests fetched successfully");
+        return NextResponse.json(res, { status: res.status });
     } catch (error) {
         console.error(error);
-        return NextResponse.json(ResponseHelper.error(error, "Internal Server Error"), { status: 500 });
+        const res = ResponseHelper.error(error);
+        return NextResponse.json(res, { status: res.status });
     }
 }
 
@@ -43,10 +47,19 @@ export async function POST(req: NextRequest) {
         });
 
         if (!session) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            const res = ResponseHelper.error(null, "Unauthorized", 401);
+            return NextResponse.json(res, { status: res.status });
         }
 
-        const { bio, reason } = await req.json();
+        const body = await req.json();
+        const validation = authorRequestSchema.safeParse(body);
+
+        if (!validation.success) {
+            const res = ResponseHelper.error(validation.error.flatten(), "Validation Error", 400);
+            return NextResponse.json(res, { status: res.status });
+        }
+
+        const { bio, reason } = validation.data;
 
         // Check if a request already exists
         const existingRequest = await prisma.authorRequest.findUnique({
@@ -54,7 +67,8 @@ export async function POST(req: NextRequest) {
         });
 
         if (existingRequest) {
-            return NextResponse.json(ResponseHelper.error(null, "You have already submitted a request"), { status: 400 });
+            const res = ResponseHelper.error(null, "You have already submitted a request", 400);
+            return NextResponse.json(res, { status: res.status });
         }
 
         const authorRequest = await prisma.authorRequest.create({
@@ -66,10 +80,12 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        return NextResponse.json(ResponseHelper.success(authorRequest, "Application submitted successfully"));
+        const res = ResponseHelper.success(authorRequest, "Application submitted successfully");
+        return NextResponse.json(res, { status: res.status });
     } catch (error) {
         console.error(error);
-        return NextResponse.json(ResponseHelper.error(error, "Internal Server Error"), { status: 500 });
+        const res = ResponseHelper.error(error);
+        return NextResponse.json(res, { status: res.status });
     }
 }
 
@@ -79,15 +95,20 @@ export async function PATCH(req: NextRequest) {
             headers: await headers()
         });
 
-        if (!session || session.user.role !== "ADMIN") {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        if (!session || (session.user as any).role !== "ADMIN") {
+            const res = ResponseHelper.error(null, "Unauthorized", 401);
+            return NextResponse.json(res, { status: res.status });
         }
 
-        const { requestId, status } = await req.json();
+        const body = await req.json();
+        const validation = updateAuthorRequestSchema.safeParse(body);
 
-        if (!["APPROVED", "REJECTED"].includes(status)) {
-            return NextResponse.json(ResponseHelper.error(null, "Invalid status"), { status: 400 });
+        if (!validation.success) {
+            const res = ResponseHelper.error(validation.error.flatten(), "Validation Error", 400);
+            return NextResponse.json(res, { status: res.status });
         }
+
+        const { requestId, status } = validation.data;
 
         const authorRequest = await prisma.authorRequest.findUnique({
             where: { id: requestId },
@@ -95,7 +116,8 @@ export async function PATCH(req: NextRequest) {
         });
 
         if (!authorRequest) {
-            return NextResponse.json(ResponseHelper.error(null, "Request not found"), { status: 404 });
+            const res = ResponseHelper.error(null, "Request not found", 404);
+            return NextResponse.json(res, { status: res.status });
         }
 
         const updatedRequest = await prisma.$transaction(async (tx) => {
@@ -119,9 +141,11 @@ export async function PATCH(req: NextRequest) {
             return request;
         });
 
-        return NextResponse.json(ResponseHelper.success(updatedRequest, `Request ${status.toLowerCase()} successfully`));
+        const res = ResponseHelper.success(updatedRequest, `Request ${status.toLowerCase()} successfully`);
+        return NextResponse.json(res, { status: res.status });
     } catch (error) {
         console.error(error);
-        return NextResponse.json(ResponseHelper.error(error, "Internal Server Error"), { status: 500 });
+        const res = ResponseHelper.error(error);
+        return NextResponse.json(res, { status: res.status });
     }
 }
