@@ -17,14 +17,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BlogSpace - Your Source for Tech & Lifestyle",
-    template: "%s | BlogSpace",
+    default: "DevJournal - Your Source for Tech & Lifestyle",
+    template: "%s | DevJournal",
   },
-  description: "Discover the latest insights in technology, lifestyle, and more on BlogSpace. Join our community of readers today.",
+  description: "Discover the latest insights in technology, lifestyle, and more on DevJournal. Join our community of readers today.",
   keywords: ["blog", "technology", "lifestyle", "nextjs", "web development", "programming"],
   openGraph: {
-    title: "BlogSpace",
-    description: "Discover the latest insights in technology, lifestyle, and more on BlogSpace.",
+    title: "DevJournal",
+    description: "Discover the latest insights in technology, lifestyle, and more on DevJournal.",
     type: "website",
   },
   icons: {
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="apple-mobile-web-app-title" content="BlogSpa" />
+        <meta name="apple-mobile-web-app-title" content="DevJournal" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider

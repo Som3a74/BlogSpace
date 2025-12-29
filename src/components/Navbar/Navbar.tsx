@@ -42,7 +42,7 @@ export function Navbar() {
                         <div className="relative">
                             <Image
                                 src="/images/logo.png"
-                                alt="BlogSpace Logo"
+                                alt="DevJournal Logo"
                                 width={130}
                                 height={120}
                                 className="object-contain h-auto"

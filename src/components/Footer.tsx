@@ -13,7 +13,7 @@ export function Footer() {
                             <div className="relative">
                                 <Image
                                     src="/images/logo.png"
-                                    alt="BlogSpace Logo"
+                                    alt="DevJournal Logo"
                                     width={130}
                                     height={120}
                                     className="object-contain h-auto"
@@ -61,7 +61,7 @@ export function Footer() {
                     </div>
                 </div>
                 <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-                    <p>&copy; {new Date().getFullYear()} BlogSpace. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} DevJournal. All rights reserved.</p>
                 </div>
             </div>
         </footer>

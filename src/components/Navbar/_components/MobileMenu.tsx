@@ -27,17 +27,17 @@ export function MobileMenu({ items, session, isPending }: MobileMenuProps) {
                     <span className="sr-only">Toggle menu</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-75 flex flex-col p-0">
+            <SheetContent side="right" className="w-200 flex flex-col p-0">
                 <SheetHeader className="px-6 py-6 border-b border-border/40">
                     <SheetTitle className="text-left flex items-center">
                         <Image
-                            src="/images/logoSm.png"
-                            alt="BlogSpace"
-                            width={32}
-                            height={32}
+                            src="/images/logo.png"
+                            alt="DevJournal"
+                            width={50}
+                            height={50}
                             className="object-contain"
                         />
-                        <span className="ml-3 text-lg font-bold tracking-tight">BlogSpace</span>
+                        <span className="ml-3 text-lg font-bold tracking-tight">DevJournal</span>
                     </SheetTitle>
                     <SheetDescription className="sr-only">
                         Navigation menu

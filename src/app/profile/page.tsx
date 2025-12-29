@@ -87,7 +87,7 @@ export default async function ProfilePage() {
                         <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/2 border border-slate-200 dark:border-white/5 space-y-2.5 relative overflow-hidden group">
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] group-hover:text-primary transition-colors">Platform Note</p>
                             <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
-                                Your profile data captures your identity across the BlogSpace community.
+                                Your profile data captures your identity across the DevJournal community.
                             </p>
                         </div>
                     </div>

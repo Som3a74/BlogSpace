@@ -90,7 +90,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
                         <div className="relative flex items-center justify-center shrink-0">
                             <div className="relative">
                                 <Image
-                                    src="/images/logoSm.png"
+                                    src="/images/logo.png"
                                     alt="Logo"
                                     width={50}
                                     height={50}
@@ -100,7 +100,7 @@ export function DashboardSidebar({ className }: SidebarProps) {
                         </div>
                         {!collapsed && (
                             <h1 className="ml-4 text-xl font-bold bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent truncate">
-                                BlogSpace
+                                DevJournal
                             </h1>
                         )}
                     </Link>
@@ -174,7 +174,7 @@ export const MobileSidebar = () => {
                                 />
                             </div>
                             <h1 className="text-xl font-bold bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                                BlogSpace
+                                DevJournal
                             </h1>
                         </Link>
 

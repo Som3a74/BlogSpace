@@ -107,7 +107,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 required
                             />
                         </div>
-                        <p className="text-[10px] text-slate-400 font-medium px-1">Your public name displayed to the BlogSpace community.</p>
+                        <p className="text-[10px] text-slate-400 font-medium px-1">Your public name displayed to the DevJournal community.</p>
                     </div>
 
                     <div className="space-y-4">

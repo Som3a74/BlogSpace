@@ -47,8 +47,8 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-lg">Email us</h3>
-                                            <p className="text-muted-foreground">hello@blogspace.com</p>
-                                            <p className="text-muted-foreground">support@blogspace.com</p>
+                                            <p className="text-muted-foreground">hello@devjournal.com</p>
+                                            <p className="text-muted-foreground">support@devjournal.com</p>
                                         </div>
                                     </div>
 

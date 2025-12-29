@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: data.title,
             description: String(data.content).substring(0, 160).replace(/<[^>]*>?/gm, ''),
             url: url,
-            siteName: "BlogSpace",
+            siteName: "DevJournal",
             images: [
                 {
                     url: data.image || "/images/logo.png",

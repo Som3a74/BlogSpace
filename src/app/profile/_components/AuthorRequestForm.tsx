@@ -124,7 +124,7 @@ export function AuthorRequestForm({ userStatus }: AuthorRequestFormProps) {
                             id="reason"
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
-                            placeholder="What kind of value will you bring to the BlogSpace community?"
+                            placeholder="What kind of value will you bring to the DevJournal community?"
                             className="min-h-35 p-6 bg-white dark:bg-slate-900/40 border-slate-200 dark:border-white/5 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-slate-900 dark:text-white placeholder:font-light"
                             required
                         />
