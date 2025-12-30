@@ -6,6 +6,12 @@ import { Suspense } from 'react'
 import ArticleGridSkeleton from './_components/ArticleGridSkeleton'
 
 import { getArticles } from '@/lib/data/articles'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: "Blog | DevJournal",
+    description: "Explore our latest articles, tutorials, and insights on web development, design, and technology. Stay updated with the latest trends.",
+};
 
 const Page = async ({
     searchParams,

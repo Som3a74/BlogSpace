@@ -57,7 +57,7 @@ export default function AuthorsSlider({ authors }: { authors: Author[] }) {
                         <CarouselContent className="-ml-4">
                             {authors.map((author) => (
                                 <CarouselItem key={author.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                                    <Link href={`/author/${author.id}`} className="group h-full block">
+                                    <Link href={`/author/${author.id}`} aria-label={`View profile of ${author.name}`} className="group h-full block">
                                         <Card className="h-full border border-muted bg-background hover:border-primary/50 hover:shadow-lg transition-all duration-300 overflow-hidden relative">
                                             <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 

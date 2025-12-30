@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { headers } from "next/headers"
 import { Metadata } from "next"
+import Image from "next/image"
 
 import BlogContent from '../_components/BlogContent'
 import CommentsSection from './_components/CommentsSection'
@@ -131,10 +132,13 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
             {/* Featured Image */}
             <div className="relative aspect-video w-full overflow-hidden rounded-4xl my-12 shadow-2xl">
-                <img
+                <Image
                     src={data.image || ""}
                     alt={data.title}
+                    fill
                     className="object-cover w-full h-full"
+                    priority
+                    sizes="(max-width: 1200px) 100vw, 1200px"
                 />
             </div>
 

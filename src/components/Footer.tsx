@@ -45,15 +45,15 @@ export function Footer() {
                     <div>
                         <h3 className="text-sm font-semibold">Social</h3>
                         <div className="mt-4 flex gap-4">
-                            <Link href="#" className="text-muted-foreground hover:text-primary">
+                            <Link href="#" aria-label="Follow us on Twitter" className="text-muted-foreground hover:text-primary">
                                 <Twitter className="h-5 w-5" />
                                 <span className="sr-only">Twitter</span>
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary">
+                            <Link href="#" aria-label="Visit our GitHub" className="text-muted-foreground hover:text-primary">
                                 <Github className="h-5 w-5" />
                                 <span className="sr-only">GitHub</span>
                             </Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary">
+                            <Link href="#" aria-label="Connect on LinkedIn" className="text-muted-foreground hover:text-primary">
                                 <Linkedin className="h-5 w-5" />
                                 <span className="sr-only">LinkedIn</span>
                             </Link>

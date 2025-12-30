@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Clock, Eye } from "lucide-react"
@@ -27,14 +28,18 @@ export default async function LatestArticlesSection() {
                         <Link
                             key={article.id}
                             href={`/blog/${article.slug}`}
+                            aria-label={`Read more about ${article.title}`}
                             className="group flex flex-col sm:flex-row gap-6 p-4 rounded-2xl bg-background border hover:border-primary/50 transition-all duration-300 hover:shadow-lg"
                         >
+                            <span className="sr-only">Read more about {article.title}</span>
                             <div className="shrink-0 w-full sm:w-48 h-48 sm:h-auto rounded-xl overflow-hidden relative">
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10" />
-                                <img
+                                <Image
                                     src={article.image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80"}
                                     alt={article.title}
+                                    fill
                                     className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                                    sizes="(max-width: 768px) 100vw, 192px"
                                 />
                             </div>
 

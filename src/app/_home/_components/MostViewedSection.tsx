@@ -15,7 +15,7 @@ export default async function MostViewedSection() {
             <div className="container px-4 md:px-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                     <div className="space-y-2">
-                        <Badge variant="secondary" className="bg-orange-500/10 text-orange-600 hover:bg-orange-500/20">
+                        <Badge variant="secondary" className="bg-orange-500/10 text-orange-700 hover:bg-orange-500/20">
                             <Trophy className="w-3 h-3 mr-1" /> Trending Now
                         </Badge>
                         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Most Viewed</h2>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -24,10 +25,12 @@ const BlogCard = ({
         <Card className={cn("group overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 flex flex-col h-full", className)}>
             <div className="aspect-video w-full bg-muted relative overflow-hidden">
                 <div className="absolute inset-0 from-black/60 to-transparent z-10" />
-                <img
+                <Image
                     src={image}
                     alt={title}
+                    fill
                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <Badge className="absolute top-4 left-4 z-20">{category.name}</Badge>
             </div>
@@ -56,7 +59,7 @@ const BlogCard = ({
                 </div>
                 <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary/80 p-0 hover:bg-transparent" asChild>
                     <Link href={`/blog/${slug}`}>
-                        Read More <ArrowRight className="h-4 w-4" />
+                        Read More <span className="sr-only">about {title}</span> <ArrowRight className="h-4 w-4" />
                     </Link>
                 </Button>
             </CardFooter>

@@ -1,5 +1,6 @@
 import { Article, Category } from "@/app/generated/prisma/client";
 import Link from "next/link";
+import Image from "next/image";
 import { Bookmark, Calendar, ChevronRight } from "lucide-react";
 
 interface SavedArticleWithDetails extends Article {
@@ -36,10 +37,12 @@ export function SavedArticlesList({ savedArticles }: { savedArticles: (any)[] })
                 >
                     {saved.article.image && (
                         <div className="w-full md:w-48 h-32 rounded-2xl overflow-hidden relative">
-                            <img
+                            <Image
                                 src={saved.article.image}
                                 alt={saved.article.title}
+                                fill
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                                sizes="(max-width: 768px) 100vw, 192px"
                             />
                         </div>
                     )}

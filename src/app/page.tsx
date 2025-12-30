@@ -4,6 +4,12 @@ import LatestArticlesSection from './_home/_components/LatestArticlesSection'
 import AuthorsSection from './_home/_components/AuthorsSection'
 import HeroSection from './_home/_components/HeroSection'
 import { AuthorsSkeleton, LatestArticlesSkeleton, MostViewedSkeleton } from './_home/_components/HomeSkeleton'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "DevJournal | Home",
+  description: "Welcome to DevJournal, your go-to source for the latest insights in technology, lifestyle, and innovation. Explore our curated articles and join our growing community.",
+};
 
 export default function Home() {
   return (
