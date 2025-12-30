@@ -1,12 +1,8 @@
-import React from 'react'
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
+'use client'
+
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import BlogCard from './BlogCard'
+import Autoplay from 'embla-carousel-autoplay'
 
 const BlogSlider = ({ blogs }: { blogs: any }) => {
     // Use the first 5 posts for the slider
@@ -22,7 +18,11 @@ const BlogSlider = ({ blogs }: { blogs: any }) => {
                 opts={{
                     align: "start",
                     loop: true,
+                    dragThreshold: 0,
                 }}
+                plugins={[
+                    Autoplay({ delay: 3000 })
+                ]}
                 className="w-full"
             >
                 <CarouselContent className="-ml-2 md:-ml-4">
@@ -40,6 +40,7 @@ const BlogSlider = ({ blogs }: { blogs: any }) => {
                                     updatedAt={post.updatedAt}
                                     createdAt={post.createdAt}
                                     user={post.user}
+                                    views={post.views}
                                     className="h-full text-sm"
                                 />
                             </div>

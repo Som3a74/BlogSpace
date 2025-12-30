@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BlogSpace
 
-## Getting Started
+**BlogSpace** is a modern, full-featured blogging platform built with **Next.js 16**, **Prisma**, and **PostgreSQL**. It offers a seamless experience for readers, authors, and administrators, featuring a robust rich-text editor, role-based access control, and a responsive, high-performance UI styled with **Tailwind CSS v4** and **Shadcn UI**.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+*   **Modern Tech Stack**: Leveraging the latest Next.js 16 App Router for optimal performance and SEO.
+*   **Role-Based Authentication**: Secure authentication system using **Better Auth** with distinct roles:
+    *   **User**: Read, comment, like, and save articles.
+    *   **Author**: Create and manage their own articles.
+    *   **Admin**: Manage categories, users, and overall platform settings.
+*   **Rich Content Editing**: Integrated **TipTap** editor for a premium writing experience with image support.
+*   **Media Management**: Fast and secure file uploads handled by **UploadThing**.
+*   **Detailed Analytics**: Track article views and engagement.
+*   **Interactive Features**: Comments, likes, and bookmarks (saved articles).
+*   **Responsive Design**: Mobile-first approach ensuring great experience on all devices.
+*   **Author Application System**: Workflow for users to apply to become authors.
+
+## 🛠️ Technology Stack
+
+*   **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Database**: [PostgreSQL](https://www.postgresql.org/)
+*   **ORM**: [Prisma](https://www.prisma.io/)
+*   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+*   **UI Components**: [Shadcn UI](https://ui.shadcn.com/) (Radix Primitives)
+*   **Authentication**: [Better Auth](https://better-auth.com/)
+*   **Forms**: React Hook Form + Zod
+*   **Editor**: TipTap
+*   **Icons**: Lucide React
+
+## 📂 Project Structure
+
+The project follows a scalable and modular folder structure designed for Next.js App Router:
+
+```
+src/
+├── app/                    # Next.js App Router directory
+│   ├── (features)/         # Grouped feature modules (e.g., Auth)
+│   │   └── auth/           # Authentication related pages/routes
+│   ├── _home/              # Components specific to the Homepage
+│   ├── api/                # API Routes (Backend logic)
+│   ├── author/             # Author Dashboard & functionality
+│   ├── blog/               # Public blog pages (Listing & Single Post)
+│   ├── contact/            # Contact page
+│   ├── dashboard/          # User & Admin Dashboard
+│   ├── generated/          # Auto-generated files (e.g., Prisma Client)
+│   ├── profile/            # User Profile management
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Landing page (Home)
+├── components/             # Reusable UI components
+│   ├── ui/                 # Shadcn UI primitives (Buttons, Inputs, etc.)
+│   └── ...                 # Other shared components
+├── lib/                    # Utility libraries & configurations
+│   ├── prisma.ts           # Prisma instantiation
+│   └── utils.ts            # Helper functions
+├── types/                  # TypeScript type definitions
+└── utils/                  # General utility functions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Organization Strategy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   **Features Grouping**: We use Route Groups `(features)` to organize complex logic like Authentication without affecting the URL path structure.
+*   **Scoped Components**: Components specific to a page (like the Home page) are kept in dedicated folders like `_home` to avoid cluttering the global `components` directory.
+*   **Domain-Driven Folders**: Major sections like `dashboard`, `blog`, and `author` have their own directories in `app`, encapsulating their specific layouts and pages.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏁 Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+*   **Node.js** (v20 or higher recommended)
+*   **PostgreSQL** database (Local or Cloud like Neon/Supabase)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/blogspace.git
+    cd blogspace
+    ```
 
-## Deploy on Vercel
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3.  **Environment Setup:**
+    Create a `.env` file in the root directory and configure your variables:
+    ```env
+    DATABASE_URL="postgresql://user:password@localhost:5432/blogspace"
+    BETTER_AUTH_SECRET="your_generated_secret"
+    BETTER_AUTH_URL="http://localhost:3000"
+    # Add other necessary keys (UploadThing icons, etc.)
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4.  **Database Setup:**
+    Push the Prisma schema to your database:
+    ```bash
+    npx prisma db push
+    # or if using migration workflows
+    npx prisma migrate dev
+    ```
+
+5.  **Run Development Server:**
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+## 📜 Scripts
+
+*   `npm run dev`: Starts the development server.
+*   `npm run build`: Builds the application for production.
+*   `npm start`: Runs the built production application.
+*   `npm run lint`: Runs ESLint to catch code issues.
+
+---
+
+Built with ❤️ by [Your Name/Team]

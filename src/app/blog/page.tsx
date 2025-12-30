@@ -1,14 +1,27 @@
 import BlogSlider from './_components/BlogSlider'
-import BlogCard from './_components/BlogCard'
 import { Badge } from "@/components/ui/badge"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import BlogSidebar from './_components/BlogSidebar'
+import ArticleGrid from './_components/ArticleGrid'
+import { Suspense } from 'react'
+import ArticleGridSkeleton from './_components/ArticleGridSkeleton'
 
 import { getArticles } from '@/lib/data/articles'
 
-const Page = async () => {
-    const articles = await getArticles()
-    console.log(articles)
+const Page = async ({
+    searchParams,
+}: {
+    searchParams: Promise<{
+        q?: string;
+        category?: string;
+        page?: string;
+        sort?: string;
+    }>;
+}) => {
+    const params = await searchParams;
+
+    // Fetch latest articles for slider (always latest, no filter)
+    const sliderResponse = await getArticles({ limit: 5 });
+    const sliderArticles = sliderResponse.data?.articles || [];
 
     return (
         <div className="container py-8 space-y-12">
@@ -27,7 +40,7 @@ const Page = async () => {
                         Stay ahead of the curve with expert analysis.
                     </p>
                 </div>
-                <BlogSlider blogs={articles.data || []} />
+                <BlogSlider blogs={sliderArticles} />
             </section>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -36,44 +49,9 @@ const Page = async () => {
 
                 {/* Main Content */}
                 <main className="lg:col-span-3 space-y-8">
-                    {/* Article Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {articles.data?.map((post: any) => (
-                            <BlogCard
-                                id={post.id}
-                                slug={post.slug}
-                                key={post.id}
-                                title={post.title}
-                                content={post.content}
-                                image={post.image}
-                                category={post.category}
-                                updatedAt={post.updatedAt}
-                                createdAt={post.createdAt}
-                                user={post.user}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Pagination */}
-                    <Pagination className="mt-8">
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious href="#" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationEllipsis />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
+                    <Suspense key={JSON.stringify(params)} fallback={<ArticleGridSkeleton />}>
+                        <ArticleGrid searchParams={params} />
+                    </Suspense>
                 </main>
             </div>
         </div>

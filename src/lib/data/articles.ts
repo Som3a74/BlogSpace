@@ -2,21 +2,71 @@ import prisma from '@/lib/prisma'
 import { ResponseHelper } from '@/lib/api-response'
 import { TArticle } from '@/types/article'
 
-export async function getArticles() {
+export async function getArticles(options?: {
+    query?: string;
+    category?: string;
+    page?: number;
+    limit?: number;
+    sort?: 'latest' | 'most-viewed' | 'oldest',
+    authorId?: string
+}) {
     try {
-        const articles = await prisma.article.findMany({
-            where: { published: true },
-            include: {
-                user: { select: { id: true, name: true, image: true } },
-                category: { select: { id: true, name: true } }
-            },
-            orderBy: { createdAt: 'desc' }
-        })
+        const { query, category, page = 1, limit = 9, sort, authorId } = options || {};
+        const skip = (page - 1) * limit;
 
-        return ResponseHelper.success(articles, "Articles fetched successfully");
+        const where: any = { published: true };
+
+        // Sorting logic
+        let orderBy: any = { createdAt: 'desc' }; // Default to latest
+        if (sort === 'most-viewed') {
+            orderBy = { views: 'desc' };
+        } else if (sort === 'oldest') {
+            orderBy = { createdAt: 'asc' };
+        }
+
+        if (query) {
+            where.OR = [
+                { title: { contains: query, mode: 'insensitive' } },
+                { proTip: { contains: query, mode: 'insensitive' } },
+            ]
+        }
+
+        if (category) {
+            where.categoryId = parseInt(category);
+        }
+
+        if (authorId) {
+            where.userId = authorId;
+        }
+
+        const [articles, total] = await prisma.$transaction([
+            prisma.article.findMany({
+                where,
+                include: {
+                    user: { select: { id: true, name: true, image: true } },
+                    category: { select: { id: true, name: true } }
+                },
+                orderBy,
+                skip,
+                take: limit,
+            }),
+            prisma.article.count({ where })
+        ]);
+
+        const totalPages = Math.ceil(total / limit);
+
+        return ResponseHelper.success({
+            articles,
+            metadata: {
+                total,
+                page,
+                totalPages,
+                limit
+            }
+        }, "Articles fetched successfully");
 
     } catch (error) {
-        return ResponseHelper.error(error, 'Internal Server Error', 500, []);
+        return ResponseHelper.error(error, 'Internal Server Error', 500, { articles: [], metadata: { total: 0, page: 1, totalPages: 0, limit: 9 } });
     }
 }
 

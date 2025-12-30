@@ -153,8 +153,11 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 </article>
 
                 {/* specific blog Sideba */}
-                <aside className="lg:col-span-4">
-                    <SpecificBlogSidebar />
+                <aside className="lg:col-span-4 hidden lg:block">
+                    <SpecificBlogSidebar
+                        categoryId={data.category.id}
+                        currentArticleId={data.id}
+                    />
                 </aside>
             </div>
         </div>
