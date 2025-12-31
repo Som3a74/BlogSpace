@@ -75,8 +75,8 @@ src/
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/blogspace.git
-    cd blogspace
+    git clone https://github.com/Som3a74/BlogSpace.git
+    cd BlogSpace
     ```
 
 2.  **Install dependencies:**
@@ -91,7 +91,7 @@ src/
 3.  **Environment Setup:**
     Create a `.env` file in the root directory and configure your variables:
     ```env
-    DATABASE_URL="postgresql://user:password@localhost:5432/blogspace"
+    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/blogspace"
     BETTER_AUTH_SECRET="your_generated_secret"
     BETTER_AUTH_URL="http://localhost:3000"
     # Add other necessary keys (UploadThing icons, etc.)
@@ -121,4 +121,4 @@ src/
 
 ---
 
-Built with ❤️ by [Your Name/Team]
+Built with ❤️ by [Ahmed Ismail]
