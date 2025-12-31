@@ -4,6 +4,7 @@ import { ResponseHelper } from "@/lib/api-response";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { updateProfileSchema } from "@/lib/validations/api-schemas";
+import { revalidatePath } from "next/cache";
 
 export async function PATCH(req: NextRequest) {
     try {
@@ -33,6 +34,8 @@ export async function PATCH(req: NextRequest) {
                 image
             }
         });
+
+        revalidatePath("/", "layout");
 
         const res = ResponseHelper.success(updatedUser, "Profile updated successfully");
         return NextResponse.json(res, { status: res.status });
